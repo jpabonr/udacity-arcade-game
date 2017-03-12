@@ -64,7 +64,7 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        // reset(allEnemies); DEBUGGING
+        reset();
         lastTime = Date.now();
         main();
     }
@@ -80,7 +80,6 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -158,15 +157,8 @@ var Engine = (function(global) {
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
-    function reset(enemies) {
-        enemies.forEach(function(enemy) {
-            if (enemy.checkCollisions == true) {
-                // main();
-            console.log("RESET");
-            } else {
-                console.log("NOTHING!");
-            };
-        });
+    function reset() {
+        //
     };
 
     /* Go ahead and load all of the images we know we're going to need to
