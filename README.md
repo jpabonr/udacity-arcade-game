@@ -1,6 +1,20 @@
-frontend-nanodegree-arcade-game
-===============================
+#"Johnny Crosses The Road" Arcade Game
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+Play this browser-based game to impersonate Johnny, a noughty boy who has sneaked out the house
+to join his friends awaiting by the river on the other side of the road. But beware! The road is 
+infested with mad bugs who would run over Johnny if given the chance.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+
+##**Getting Started**
+
+1. Download the _udacity-arcade-game_ repository to your machine.
+2. Find the folder in your local drive and open it.
+3. Open the **index.html** file with a browser. The game will start running automatically.
+
+
+##**How to Play**
+
+- Use the up/down/left/right arrows on your keybord to move Johnny around.
+- Try crossing the road while dodging the bugs. If you're run over by one you'll go back to where you started.
+
+Let's play!

@@ -1,3 +1,5 @@
+//////////////////////////   ENEMIES   //////////////////////////
+
 // Enemies our player must avoid
 var Enemy = function(x, y) {
     // Variables applied to each of our instances go here,
@@ -24,11 +26,7 @@ Enemy.prototype.update = function(dt) {
         this.x = this.x + this.speed * dt;
     } else {    
         this.x = -100; // this makes enemies re-appear from the far left-hand side of the canvas.
-    };
-    // This function resets the player's position if an enemy detects a collision.
-    // if (this.checkCollisions(player.x, player.y) === true) {
-    //     player.reset();
-    // };
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -36,31 +34,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Player's left/right marging 18px, top margin 64px, bottom margin 32px. 
-
-// Enemy.prototype.checkCollisions = function (playerX, playerY) {
-//     // xDelta measures the absulute distance on the X axis between the enemy and the player.
-//     var xDelta = Math.abs(this.x - playerX);
-
-//     // yDelta measures the absulute distance on the Y axis between the enemy and the player.
-//     var yDelta = Math.abs(this.y - playerY);
-
-//     // This function defines a collision based on the distance between  the player's 
-//     // and enemies' silhouttes. Specifically, when xDelta and yDelta are below a certain 
-//     // threshold. For the Y axis, the threshold is 10px (and not 0px) to account for the 
-//     // fact that the player's and enemies' images will never be perfectly verticallly 
-//     // aligned. For the X axis, the threshold is the width of the enemy's image (101px) 
-//     // minus the left margin in the player image (18px).
-//     if (yDelta < 10 && xDelta < 83) {  // Player top margin: 64px, enemy bottom margin: 28px.
-//         console.log("COLLISION!"); // DEBUGGING
-//         return true;
-//     } else {
-//         return false;
-//     };
-// };
-
-
-// ----------PLAYER-------------
+//////////////////////////   PLAYER   //////////////////////////
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -68,9 +42,12 @@ Enemy.prototype.render = function() {
 
 var Player = function(x, y) {
     this.sprite = 'images/char-boy.png';
+    this.shoutLeft = 'images/shout_l.png';
+    this.shoutRight = 'images/shout_r.png';
     this.x = x;
     this.y = y;
 };
+
 /*
 This function defines a collision based on the distance between  the player's 
 and enemies' silhouttes. Specifically, when xDelta and yDelta are below a certain 
@@ -84,57 +61,60 @@ Player.prototype.checkCollisions = function() {
     allEnemies.forEach(function(enemy) {
         
         // xDelta measures the absulute distance on the X axis between the enemy and the player.
-        var xDelta = Math.abs(player.x - enemy.x); // NOT SURE WHY IT SHOULDN'T BE this.x
+        var xDelta = Math.abs(this.x - enemy.x);
         
         // yDelta measures the absulute distance on the Y axis between the enemy and the player.
-        var yDelta = Math.abs(player.y - enemy.y); // NOT SURE WHY IT SHOULDN'T BE this.x
+        var yDelta = Math.abs(this.y - enemy.y);
         
-        // THIS IF STATEMENT IS NOT WORKING.
         if (yDelta < 10 && xDelta < 83) {  // Player top margin: 64px, enemy bottom margin: 28px.
-            console.log("COLLISION!"); // DEBUGGING
-            player.x = 200; // NOT SURE WHY IT SHOULDN'T BE this.x
-            player.y = 403; // NOT SURE WHY IT SHOULDN'T BE this.y
-        };
-    });
+            setTimeout(function(){this.reset();}.bind(this), 50);
+        }
+    }, this);
+};
+
+// This displays a speech bubble (on the correct side of the player) when he reaches the river.
+Player.prototype.shout = function () {
+    var shoutX;
+    var shoutY;
+    if (this.x != 400) {
+        shoutX = this.x + 83;
+        shoutY = this.y + 80;
+        ctx.drawImage(Resources.get(this.shoutRight), shoutX, shoutY);
+    } else {
+        shoutX = this.x - 70;
+        shoutY = this.y + 80;
+        ctx.drawImage(Resources.get(this.shoutLeft), shoutX, shoutY);
+    }
 };
 
 Player.prototype.update = function(dt) {
     this.checkCollisions();
 
-    // This resets the player's position once reaching the river.
+    // This detects that the player has reached the river and resets his position after 2 sec.
     if (this.y <= -12) {
-        console.log("YOU WON!"); // DEBUGGING
-        
-        // This is the player's celebratory dance consisting on moving side to side along the river.
-        if (this.x < 400) {
-            this.x = this.x + 10;
-        };
-        // I HAVEN'T BEEN ABLE TO FIGURE OUT HOW TO MAKE THE PLAYER MOVE
-        // TO THE LEFT ONE HE REACHES THE RIGHT EDGE OF THE CANVAS.
-        // if (this.x === 400) {
-        //     this.x = this.x - 10;
-        // };
-
-        setTimeout(function(){player.reset();}, 2000); // NOT SURE WHY IT WOULDN'T BE this.reset()
-    };
+        setTimeout(function(){this.reset();}.bind(this), 2000);
+    }
 };
 
 Player.prototype.render = function() {
-   ctx.drawImage(Resources.get(this.sprite), this.x, this.y); 
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (this.y <= -12) {
+        this.shout();
+    }
 };
 
 Player.prototype.handleInput = function (dir) {
-    if (dir == 'left' && this.x > 0) {
-        this.x = this.x - 100;
+    if (dir === 'left' && this.x > 0) {
+        this.x -= 100;
     }
-    if (dir == 'right' && this.x < 400) {
-        this.x = this.x + 100;
+    if (dir === 'right' && this.x < 400) {
+        this.x += 100;
     }
-    if (dir == 'up' && this.y > 0) {
-        this.y = this.y - 83;
+    if (dir === 'up' && this.y > 0) {
+        this.y -= 83;
     }
-    if (dir == 'down' && this.y < 403) {
-        this.y = this.y + 83;
+    if (dir === 'down' && this.y < 403) {
+        this.y += 83;
     }
 };
 
@@ -146,21 +126,11 @@ Player.prototype.reset = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
-// var allEnemies = [new Enemy(-100, 62), new Enemy(-100,145), new Enemy(-100,228)];
 var player = new Player(200,403);
-
-// var enemy1 = new Enemy(-100, 228); // DEBUGGING
-// var allEnemies = [enemy1] // DEBUGGING
-
 var enemy1 = new Enemy(-100, 62);
 var enemy2 = new Enemy(-100, 145);
 var enemy3 = new Enemy(-100, 228);
 var allEnemies = [enemy1, enemy2, enemy3];
-
-// enemy1.checkCollisions(player.x, player.y);
-// enemy2.checkCollisions(player.x, player.y);
-// enemy3.checkCollisions(player.x, player.y);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
